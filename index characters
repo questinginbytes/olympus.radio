@@ -1,0 +1,21 @@
+import { useRouter } from 'next/router';
+import { characters } from '@/lib/characters';
+import MainPlaylist from '@/components/MainPlaylist';
+import VotingPlaylist from '@/components/VotingPlaylist';
+
+export default function CharacterPage() {
+  const { slug } = useRouter().query;
+  const character = characters.find((c) => c.slug === slug);
+
+  if (!character) return <p className="text-white">Character not found</p>;
+
+  return (
+    <div className="min-h-screen bg-black text-white p-6">
+      <h1 className="text-3xl font-bold mb-6">{character.name}</h1>
+      <h2 className="text-xl mb-2">Main Playlist</h2>
+      <MainPlaylist urls={character.mainPlaylist} />
+      <h2 className="text-xl mt-6 mb-2">Community Voting Playlist</h2>
+      <VotingPlaylist characterSlug={character.slug} />
+    </div>
+  );
+}
