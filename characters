@@ -1,0 +1,24 @@
+export const characters = [
+  {
+    name: "Percy Jackson",
+    slug: "percy-jackson",
+    mainPlaylist: [
+      "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      "https://www.youtube.com/watch?v=Zi_XLOBDo_Y"
+    ]
+  },
+  {
+    name: "Annabeth Chase",
+    slug: "annabeth-chase",
+    mainPlaylist: [
+      "https://www.youtube.com/watch?v=lWA2pjMjpBs"
+    ]
+  },
+  {
+    name: "Apollo",
+    slug: "apollo",
+    mainPlaylist: [
+      "https://www.youtube.com/watch?v=RubBzkZzpUA"
+    ]
+  }
+];
