@@ -1,0 +1,17 @@
+export default function MainPlaylist({ urls }: { urls: string[] }) {
+  return (
+    <div className="space-y-4">
+      {urls.map((url, i) => (
+        <iframe
+          key={i}
+          src={url.replace("watch?v=", "embed/")}
+          width="100%"
+          height="315"
+          className="rounded-xl"
+          allow="autoplay; encrypted-media"
+          allowFullScreen
+        />
+      ))}
+    </div>
+  );
+}
