@@ -1,0 +1,64 @@
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabaseClient';
+
+export default function VotingPlaylist({ characterSlug }: { characterSlug: string }) {
+  const [songs, setSongs] = useState<any[]>([]);
+  const [newUrl, setNewUrl] = useState('');
+
+  const fetchSongs = async () => {
+    const { data } = await supabase
+      .from('songs')
+      .select('*')
+      .eq('character_slug', characterSlug)
+      .order('upvotes', { ascending: false });
+    setSongs(data || []);
+  };
+
+  useEffect(() => {
+    fetchSongs();
+  }, [characterSlug]);
+
+  const addSong = async () => {
+    if (!newUrl) return;
+    await supabase.from('songs').insert([{ character_slug: characterSlug, youtube_url: newUrl, upvotes: 0 }]);
+    setNewUrl('');
+    fetchSongs();
+  };
+
+  const upvote = async (id: number) => {
+    await supabase.rpc('increment_upvote', { song_id: id });
+    fetchSongs();
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2 mb-4">
+        <input
+          value={newUrl}
+          onChange={(e) => setNewUrl(e.target.value)}
+          className="p-2 w-full bg-gray-800 text-white rounded"
+          placeholder="Add YouTube URL"
+        />
+        <button onClick={addSong} className="bg-green-600 px-4 py-2 rounded">Add</button>
+      </div>
+      {songs.map((song) => (
+        <div key={song.id} className="bg-gray-800 p-4 rounded flex flex-col">
+          <iframe
+            src={song.youtube_url.replace("watch?v=", "embed/")}
+            width="100%"
+            height="215"
+            className="rounded"
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+          />
+          <button
+            onClick={() => upvote(song.id)}
+            className="mt-2 self-end text-sm text-blue-400 hover:text-blue-200"
+          >
+            👍 {song.upvotes}
+          </button>
+        </div>
+      ))}
+    </div>
+  );
+}
